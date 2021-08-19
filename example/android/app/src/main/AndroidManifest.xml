@@ -1,5 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.paytrek.state.emv_card_reader_example">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.paytrek.stater.example">
    <application
         android:label="emv_card_reader_example"
         android:icon="@mipmap/ic_launcher">

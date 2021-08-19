@@ -1,4 +1,4 @@
-group 'com.paytrek.state.emv_card_reader'
+group 'com.paytrek.stater'
 version '1.0-SNAPSHOT'
 
 buildscript {

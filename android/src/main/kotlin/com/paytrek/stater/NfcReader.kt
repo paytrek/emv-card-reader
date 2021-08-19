@@ -1,16 +1,25 @@
-package com.paytrek.state.emv_card_reader
+package com.paytrek.stater
 
+import android.app.Activity
 import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.nfc.tech.IsoDep
+import android.os.Handler
+import android.os.Looper
 import com.github.devnied.emvnfccard.parser.EmvTemplate
-import android.util.Log
+import io.flutter.plugin.common.MethodCall
+import io.flutter.plugin.common.MethodChannel
 import java.text.SimpleDateFormat
+import android.util.Log
 
-class NfcScanner(private val plugin: EmvCardReaderPlugin) : NfcAdapter.ReaderCallback {
+sealed class AbstractNfcHandler(val result: MethodChannel.Result, val call: MethodCall) : NfcAdapter.ReaderCallback {
+    protected fun unregister() = EmvCardReaderPlugin.listeners.remove(this)
+}
+
+class NfcReader(result: MethodChannel.Result, call: MethodCall) : AbstractNfcHandler(result, call) {
+    private val handler = Handler(Looper.getMainLooper())
+
     override fun onTagDiscovered(tag: Tag) {
-        val sink = plugin.sink ?: return
-
         val id = IsoDep.get(tag)
         id.connect()
 
@@ -45,6 +54,8 @@ class NfcScanner(private val plugin: EmvCardReaderPlugin) : NfcAdapter.ReaderCal
         res.put("expire", expire)
         res.put("holder", holder)
 
-        sink.success(res)
+        handler.post{ result.success(res) }
+
+        unregister()
     }
 }
