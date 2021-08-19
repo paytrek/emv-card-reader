@@ -7,6 +7,7 @@ import android.nfc.tech.IsoDep
 import android.os.Handler
 import android.os.Looper
 import com.github.devnied.emvnfccard.parser.EmvTemplate
+import com.github.devnied.emvnfccard.model.enums.CardStateEnum
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import java.text.SimpleDateFormat
@@ -29,17 +30,19 @@ class NfcReader(result: MethodChannel.Result, call: MethodCall) : AbstractNfcHan
         val parser = EmvTemplate.Builder().setProvider(provider).setConfig(config).build()
 
         val card = parser.readEmvCard()
-
+         
         var number: String? = null
         var expire: String? = null
         var holder: String? = null
+        var type: String? = null
+        var status: String? = null
 
         val fmt = SimpleDateFormat("MM/YY")
 
         if (card.track1 != null) {
             number = card.track1.cardNumber
             expire = fmt.format(card.track1.expireDate)
-        } else {
+        } else if (card.track2 != null) {
             number = card.track2.cardNumber
             expire = fmt.format(card.track2.expireDate)
         }
@@ -48,11 +51,24 @@ class NfcReader(result: MethodChannel.Result, call: MethodCall) : AbstractNfcHan
             holder = card.holderFirstname + " " + card.holderLastname
         }
 
+        if (card.type != null) {
+            type = card.type.name
+        }
+
+        if (card.state == CardStateEnum.UNKNOWN) {
+            status = "unknown"
+        } else if (card.state == CardStateEnum.LOCKED) {
+            status = "locked"
+        } else if (card.state == CardStateEnum.ACTIVE) {
+            status = "active"
+        }
+
         val res = HashMap<String, String?>()
-        res.put("type", card.type.name)
+        res.put("type", type)
         res.put("number", number)
         res.put("expire", expire)
         res.put("holder", holder)
+        res.put("status", status)
 
         handler.post{ result.success(res) }
 
