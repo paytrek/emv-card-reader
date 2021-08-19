@@ -3,11 +3,15 @@ package com.paytrek.stater
 import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.nfc.tech.IsoDep
+import android.os.Handler
+import android.os.Looper
 import com.github.devnied.emvnfccard.parser.EmvTemplate
 import android.util.Log
 import java.text.SimpleDateFormat
 
 class NfcScanner(private val plugin: EmvCardReaderPlugin) : NfcAdapter.ReaderCallback {
+    private val handler = Handler(Looper.getMainLooper())
+
     override fun onTagDiscovered(tag: Tag) {
         val sink = plugin.sink ?: return
 
@@ -45,6 +49,8 @@ class NfcScanner(private val plugin: EmvCardReaderPlugin) : NfcAdapter.ReaderCal
         res.put("expire", expire)
         res.put("holder", holder)
 
-        sink.success(res)
+        handler.post{ sink.success(res) }
+
+        id.close()
     }
 }
