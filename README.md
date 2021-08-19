@@ -11,13 +11,7 @@ Add dependency in `pubsec.yaml`,
 dependencies:
     emv_card_reader:
         git:
-            url: git://github.com/trk54ylmz/emv_card_reader.git
-```
-
-and add permission in `AndroidManifest.xml`,
-
-```xml
-<uses-permission android:name="android.permission.NFC"/>
+            url: git://github.com/paytrek/emv-card-reader.git
 ```
 
 ### Usage
