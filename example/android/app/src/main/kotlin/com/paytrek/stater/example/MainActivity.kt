@@ -1,4 +1,4 @@
-package com.paytrek.state.emv_card_reader_example
+package com.paytrek.stater.example
 
 import io.flutter.embedding.android.FlutterActivity
 

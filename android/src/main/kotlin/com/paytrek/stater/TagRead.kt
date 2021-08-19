@@ -1,4 +1,4 @@
-package com.paytrek.state.emv_card_reader
+package com.paytrek.stater
 
 import android.nfc.Tag
 import android.nfc.tech.Ndef

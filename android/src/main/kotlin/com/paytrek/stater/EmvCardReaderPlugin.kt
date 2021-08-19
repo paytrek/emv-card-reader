@@ -1,4 +1,4 @@
-package com.paytrek.state.emv_card_reader
+package com.paytrek.stater
 
 import android.Manifest
 import android.app.Activity
