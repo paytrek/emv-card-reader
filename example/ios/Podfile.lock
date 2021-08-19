@@ -1,0 +1,22 @@
+PODS:
+  - emv_card_reader (0.0.1):
+    - Flutter
+  - Flutter (1.0.0)
+
+DEPENDENCIES:
+  - emv_card_reader (from `.symlinks/plugins/emv_card_reader/ios`)
+  - Flutter (from `Flutter`)
+
+EXTERNAL SOURCES:
+  emv_card_reader:
+    :path: ".symlinks/plugins/emv_card_reader/ios"
+  Flutter:
+    :path: Flutter
+
+SPEC CHECKSUMS:
+  emv_card_reader: 7cba88c45692bdcad1ef842615d42b67e7347e2f
+  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
+
+PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
+
+COCOAPODS: 1.10.2
