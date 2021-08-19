@@ -30,7 +30,7 @@ class NfcReader(result: MethodChannel.Result, call: MethodCall) : AbstractNfcHan
         val parser = EmvTemplate.Builder().setProvider(provider).setConfig(config).build()
 
         val card = parser.readEmvCard()
-         
+
         var number: String? = null
         var expire: String? = null
         var holder: String? = null
