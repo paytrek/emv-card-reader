@@ -7,7 +7,6 @@ import android.nfc.NfcAdapter
 import android.nfc.NfcAdapter.*
 import android.nfc.NfcManager
 import android.nfc.Tag
-import android.util.Log
 import androidx.annotation.NonNull
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -86,8 +85,6 @@ class EmvCardReaderPlugin: FlutterPlugin, ActivityAware, MethodCallHandler, Even
   }
 
   override fun onAttachedToActivity(@NonNull binding: ActivityPluginBinding) {
-    Log.d("TAG", "activity starting")
-
     if (activity != null) return
 
     val activity = binding.activity
@@ -99,14 +96,10 @@ class EmvCardReaderPlugin: FlutterPlugin, ActivityAware, MethodCallHandler, Even
 
     activity.requestPermissions(arrayOf(Manifest.permission.NFC), 1007)
 
-    Log.d("TAG", "activity started")
-
     start()
   }
 
-  override fun onListen(arguments: Any, events: EventChannel.EventSink) {
-    Log.d("TAG", "activity listening")
-
+  override fun onListen(arguments: Any?, events: EventChannel.EventSink) {
     sink = events
   }
 

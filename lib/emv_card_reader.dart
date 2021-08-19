@@ -24,6 +24,6 @@ class EmvCardReader {
   }
 
   Stream<Map<String, String?>?> stream() {
-    return _ec.receiveBroadcastStream().map((event) => event as Map<String, String?>);
+    return _ec.receiveBroadcastStream().map((e) => Map<String, String?>.from(e));
   }
 }
