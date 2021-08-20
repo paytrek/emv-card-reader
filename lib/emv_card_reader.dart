@@ -25,7 +25,9 @@ class EmvCardReader {
   }
 
   Stream<EmvCard?> stream() {
-    return _ec.receiveBroadcastStream().map((e) => cardCallback(Map<String, String?>.from(e)));
+    final sc = (e) => e == null ? null : cardCallback(Map<String, String?>.from(e));
+
+    return _ec.receiveBroadcastStream().map(sc);
   }
 
   /// Create card object from result

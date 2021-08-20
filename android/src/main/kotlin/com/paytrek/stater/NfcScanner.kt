@@ -7,7 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import com.github.devnied.emvnfccard.parser.EmvTemplate
 import com.github.devnied.emvnfccard.model.enums.CardStateEnum
-import android.util.Log
+import java.io.IOException
 import java.text.SimpleDateFormat
 
 class NfcScanner(private val plugin: EmvCardReaderPlugin) : NfcAdapter.ReaderCallback {
@@ -16,8 +16,16 @@ class NfcScanner(private val plugin: EmvCardReaderPlugin) : NfcAdapter.ReaderCal
     override fun onTagDiscovered(tag: Tag) {
         val sink = plugin.sink ?: return
 
-        val id = IsoDep.get(tag)
-        id.connect()
+        var id: IsoDep
+
+        try {
+            id = IsoDep.get(tag)
+            id.connect()
+        } catch (e: IOException) {
+            handler.post{ sink.success(null) }
+
+            return
+        }
 
         val provider = IsoDepProvider(id)
         val config = EmvTemplate.Config()

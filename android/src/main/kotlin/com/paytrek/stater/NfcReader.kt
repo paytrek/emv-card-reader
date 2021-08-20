@@ -10,8 +10,8 @@ import com.github.devnied.emvnfccard.parser.EmvTemplate
 import com.github.devnied.emvnfccard.model.enums.CardStateEnum
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
+import java.io.IOException
 import java.text.SimpleDateFormat
-import android.util.Log
 
 sealed class AbstractNfcHandler(val result: MethodChannel.Result, val call: MethodCall) : NfcAdapter.ReaderCallback {
     protected fun unregister() = EmvCardReaderPlugin.listeners.remove(this)
@@ -21,8 +21,18 @@ class NfcReader(result: MethodChannel.Result, call: MethodCall) : AbstractNfcHan
     private val handler = Handler(Looper.getMainLooper())
 
     override fun onTagDiscovered(tag: Tag) {
-        val id = IsoDep.get(tag)
-        id.connect()
+        var id: IsoDep
+
+        try {
+            id = IsoDep.get(tag)
+            id.connect()
+        } catch (e: IOException) {
+            handler.post{ result.success(null) }
+
+            unregister()
+
+            return
+        }
 
         val provider = IsoDepProvider(id)
         val config = EmvTemplate.Config()
