@@ -103,7 +103,7 @@ class EmvCardReaderPlugin: FlutterPlugin, ActivityAware, MethodCallHandler, Even
     sink = events
   }
 
-  override fun onCancel(arguments: Any) {
+  override fun onCancel(arguments: Any?) {
     sink = null
   }
 
