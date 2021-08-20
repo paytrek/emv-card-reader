@@ -1,5 +1,5 @@
 name: emv_card_reader
-description: EMV card reader by using NFC technology
+description: NFC reader for payment related EMV card family
 version: 0.0.1
 homepage:
 

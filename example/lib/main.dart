@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:emv_card_reader/card.dart';
 import 'package:emv_card_reader/emv_card_reader.dart';
+import 'package:flutter/material.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,7 +16,7 @@ class _MyAppState extends State<MyApp> {
   final _emv = EmvCardReader();
 
   // Card data
-  Map<String, String?>? _card;
+  EmvCard? _card;
 
   @override
   void initState() {
@@ -28,10 +29,10 @@ class _MyAppState extends State<MyApp> {
       }
 
       // Stream NFC tags
-      _emv.stream().listen((event) => setState(() => _card = event));
+      _emv.stream().listen((card) => setState(() => _card = card));
 
       // OR read once by using,
-      //_emv.read().then((value) => print(value));
+      // _emv.read().then((value) => print(value));
     };
 
     final sc = (_) {
@@ -57,12 +58,13 @@ class _MyAppState extends State<MyApp> {
     if (_card == null) {
       result = Text('Waiting');
     } else {
-      final number = _card!['number'];
-      final type = _card!['type'];
-      final holder = _card!['holder'];
-      final expire = _card!['expire'];
+      final number = _card!.number;
+      final type = _card!.type;
+      final holder = _card!.holder;
+      final expire = _card!.expire;
+      final status = _card!.status;
 
-      result = Text('$number - $type - $holder - $expire');
+      result = Text('$number - $type - $holder - $expire - $status');
     }
 
     return MaterialApp(

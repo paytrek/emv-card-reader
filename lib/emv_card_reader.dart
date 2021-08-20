@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:emv_card_reader/card.dart';
 import 'package:flutter/services.dart';
 
 class EmvCardReader {
@@ -19,11 +20,26 @@ class EmvCardReader {
     return await _mc.invokeMethod('stop');
   }
 
-  Future<Map<String, String?>?> read() async {
-    return _mc.invokeMapMethod<String, String?>('read');
+  Future<EmvCard?> read() async {
+    return _mc.invokeMapMethod<String, String?>('read').then((value) => cardCallback(value));
   }
 
-  Stream<Map<String, String?>?> stream() {
-    return _ec.receiveBroadcastStream().map((e) => Map<String, String?>.from(e));
+  Stream<EmvCard?> stream() {
+    return _ec.receiveBroadcastStream().map((e) => cardCallback(Map<String, String?>.from(e)));
+  }
+
+  /// Create card object from result
+  EmvCard? cardCallback(Map<String, String?>? event) {
+    if (event == null) {
+      return null;
+    }
+
+    return EmvCard(
+      number: event['number'],
+      type: event['type'],
+      holder: event['holder'],
+      expire: event['expire'],
+      status: event['status'],
+    );
   }
 }
