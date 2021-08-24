@@ -21,28 +21,32 @@ import java.util.concurrent.CopyOnWriteArrayList
 class EmvCardReaderPlugin: FlutterPlugin, ActivityAware, MethodCallHandler, EventChannel.StreamHandler, NfcAdapter.ReaderCallback {
   internal var sink: EventChannel.EventSink? = null
 
-  private var activity: Activity? = null
+  private var activity : Activity? = null
+
+  private var adapter : NfcAdapter? = null
 
   private lateinit var mc : MethodChannel
 
   private lateinit var ec : EventChannel
-
-  private lateinit var adapter :  NfcAdapter
 
   companion object {
     internal val listeners = CopyOnWriteArrayList<NfcAdapter.ReaderCallback>()
   }
 
   private fun start() {
+    if (adapter == null) return
+
     val f = FLAG_READER_NFC_A or FLAG_READER_NFC_B or FLAG_READER_NFC_F or FLAG_READER_NFC_V
 
     listeners.add(NfcScanner(this))
 
-    adapter.enableReaderMode(activity, this, f, null)
+    adapter!!.enableReaderMode(activity, this, f, null)
   }
 
   private fun stop() {
-    adapter.disableReaderMode(activity)
+    if (adapter == null) return
+
+    adapter!!.disableReaderMode(activity)
 
     listeners.clear()
   }
@@ -59,7 +63,7 @@ class EmvCardReaderPlugin: FlutterPlugin, ActivityAware, MethodCallHandler, Even
     require(activity != null) { "Plugin not ready yet" }
 
     if (call.method == "available") {
-      if (adapter != null && adapter.isEnabled()) {
+      if (adapter != null && adapter!!.isEnabled()) {
         result.success(true)
       } else {
         result.success(false)
