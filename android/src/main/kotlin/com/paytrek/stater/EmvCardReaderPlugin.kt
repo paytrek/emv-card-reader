@@ -51,11 +51,11 @@ class EmvCardReaderPlugin: FlutterPlugin, ActivityAware, MethodCallHandler, Even
     listeners.clear()
   }
 
-  override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-    mc = MethodChannel(flutterPluginBinding.binaryMessenger, "emv_card_reader_channel")
+  override fun onAttachedToEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
+    mc = MethodChannel(binding.binaryMessenger, "emv_card_reader_channel")
     mc.setMethodCallHandler(this)
 
-    ec = EventChannel(flutterPluginBinding.binaryMessenger, "emv_card_reader_sink")
+    ec = EventChannel(binding.binaryMessenger, "emv_card_reader_sink")
     ec.setStreamHandler(this)
   }
 
@@ -103,6 +103,18 @@ class EmvCardReaderPlugin: FlutterPlugin, ActivityAware, MethodCallHandler, Even
     start()
   }
 
+  override fun onTagDiscovered(tag: Tag) {
+    listeners.forEach { it.onTagDiscovered(tag) }
+  }
+
+  override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
+    onAttachedToActivity(binding)
+  }
+
+  override fun onDetachedFromActivityForConfigChanges() {
+    onDetachedFromActivity()
+  }
+
   override fun onListen(arguments: Any?, events: EventChannel.EventSink) {
     sink = events
   }
@@ -114,10 +126,4 @@ class EmvCardReaderPlugin: FlutterPlugin, ActivityAware, MethodCallHandler, Even
   override fun onDetachedFromActivity() {
     activity = null
   }
-
-  override fun onTagDiscovered(tag: Tag): Unit = listeners.forEach { it.onTagDiscovered(tag) }
-
-  override fun onReattachedToActivityForConfigChanges(b: ActivityPluginBinding): Unit = onAttachedToActivity(b)
-
-  override fun onDetachedFromActivityForConfigChanges(): Unit = onDetachedFromActivity()
 }
